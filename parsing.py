@@ -3,10 +3,21 @@ from bs4 import BeautifulSoup
 import csv
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 '
+                  'Safari/537.36 '
 }
 
-url = 'https://zakupki.gov.ru/epz/rkpo/search/results.html?morphology=on&search-filter=%D0%94%D0%B0%D1%82%D0%B5+%D1%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D1%8F&pageNumber=1&sortDirection=false&recordsPerPage=_10&sortBy=UPDATE_DATE&active=on&region_selectedSubjects_21959484=region_selectedSubjects_21959484&region_selectedSubjects_21959485=region_selectedSubjects_21959485&region_selectedSubjects_21959486=region_selectedSubjects_21959486&region_selectedSubjects_21959487=region_selectedSubjects_21959487&region_selectedSubjects_21959488=region_selectedSubjects_21959488&region_selectedSubjects_21959489=region_selectedSubjects_21959489&region_selectedSubjects_21959490=region_selectedSubjects_21959490&region_selectedSubjects_21959491=region_selectedSubjects_21959491&region_selectedSubjects_27517303=region_selectedSubjects_27517303&region_selectedSubjects_30322762=region_selectedSubjects_30322762&selectedSubjects=21959484%2C21959485%2C21959486%2C21959487%2C21959488%2C21959489%2C21959490%2C21959491%2C27517303%2C30322762&customerPlaceWithNested=on'
+url = 'https://zakupki.gov.ru/epz/rkpo/search/results.html?morphology=on&search-filter=%D0%94%D0%B0%D1%82%D0%B5+%D1' \
+      '%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D1%8F&pageNumber=1&sortDirection=false&recordsPerPage=_10' \
+      '&sortBy=UPDATE_DATE&active=on&region_selectedSubjects_21959484=region_selectedSubjects_21959484' \
+      '&region_selectedSubjects_21959485=region_selectedSubjects_21959485&region_selectedSubjects_21959486' \
+      '=region_selectedSubjects_21959486&region_selectedSubjects_21959487=region_selectedSubjects_21959487' \
+      '&region_selectedSubjects_21959488=region_selectedSubjects_21959488&region_selectedSubjects_21959489' \
+      '=region_selectedSubjects_21959489&region_selectedSubjects_21959490=region_selectedSubjects_21959490' \
+      '&region_selectedSubjects_21959491=region_selectedSubjects_21959491&region_selectedSubjects_27517303' \
+      '=region_selectedSubjects_27517303&region_selectedSubjects_30322762=region_selectedSubjects_30322762' \
+      '&selectedSubjects=21959484%2C21959485%2C21959486%2C21959487%2C21959488%2C21959489%2C21959490%2C21959491' \
+      '%2C27517303%2C30322762&customerPlaceWithNested=on '
 urls = []
 base_url = 'https://zakupki.gov.ru'
 session = requests.Session()
@@ -16,7 +27,7 @@ if r.status_code == 200:
     soup = BeautifulSoup(r.content, 'lxml')
     try:
         pagination = soup.find_all('a', attrs={'class': 'page__link'})
-        count = int(pagination[-1].text)
+        # count = int(pagination[-1].text)
         # print(count)
         count = 2
         for i in range(count):
@@ -68,16 +79,14 @@ if r.status_code == 200:
                         print(' '.join(title_section.split()))
                         sub_data[' '.join(title_section.split())] = ' '.join(info_section.split())
 
-
             data.append(sub_data)
             print(sub_data)
             # print(' '.join(sub_div.text.split()))
-for i in data:
-    print(i)
-with open('data.csv', 'w', newline='') as file_csv:
-    a_pen = csv.writer(file_csv, quoting=csv.QUOTE_NONNUMERIC)
-    # a_pen.writerows(data)
-    a_pen.writerow(data[0])
-    for x in data:
+    for i in data:
+        print(i)
+    with open('data.csv', 'w', newline='') as file_csv:
+        a_pen = csv.writer(file_csv, quoting=csv.QUOTE_NONNUMERIC)
+        # a_pen.writerows(data)
+        a_pen.writerow(data[0])
+        for x in data:
             a_pen.writerow(x.values())
-
